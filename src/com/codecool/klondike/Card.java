@@ -8,6 +8,8 @@ import javafx.scene.paint.Color;
 import java.util.*;
 
 public class Card extends ImageView {
+    enum Suits { HEARTS, DIAMONDS, SPADES, CLUBS }
+
 
     private int suit;
     private int rank;
@@ -28,6 +30,10 @@ public class Card extends ImageView {
         this.rank = rank;
         this.faceDown = faceDown;
         this.dropShadow = new DropShadow(2, Color.gray(0, 0.75));
+
+        //FOR COLOURS
+        //String colour = "red";
+
         backFace = cardBackImage;
         frontFace = cardFaceImages.get(getShortName());
         setImage(faceDown ? backFace : frontFace);
@@ -78,8 +84,25 @@ public class Card extends ImageView {
     }
 
     public static boolean isOppositeColor(Card card1, Card card2) {
-        //TODO
-        return true;
+        String colour1;
+        String colour2;
+        int card1Suit = card1.suit;
+        int card2Suit = card2.suit;
+
+
+       if (card1Suit < 3) {
+            colour1 = "red";
+       } else {
+           colour1 = "black";
+       }
+
+       if (card2Suit < 3 ){
+            colour2 = "red";
+       } else {
+           colour2 = "black";
+       }
+
+       return (colour1.equals(colour2));
     }
 
     public static boolean isSameSuit(Card card1, Card card2) {
@@ -99,28 +122,19 @@ public class Card extends ImageView {
     public static void loadCardImages() {
         cardBackImage = new Image("card_images/card_back.png");
         String suitName = "";
-        for (int suit = 1; suit < 5; suit++) {
-            switch (suit) {
-                case 1:
-                    suitName = "hearts";
-                    break;
-                case 2:
-                    suitName = "diamonds";
-                    break;
-                case 3:
-                    suitName = "spades";
-                    break;
-                case 4:
-                    suitName = "clubs";
-                    break;
-            }
+
+        for (int i = 0; i < 4; i++) {
+            suitName = Suits.values()[i].toString().toLowerCase();
+
             for (int rank = 1; rank < 14; rank++) {
                 String cardName = suitName + rank;
-                String cardId = "S" + suit + "R" + rank;
+                String cardId = "S" + i + "R" + rank;
                 String imageFileName = "card_images/" + cardName + ".png";
                 cardFaceImages.put(cardId, new Image(imageFileName));
+                //System.out.println(imageFileName);
             }
         }
-    }
 
+    }
 }
+
