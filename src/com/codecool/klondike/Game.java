@@ -140,7 +140,7 @@ public class Game extends Pane {
         if (destPile.getPileType().equals(Pile.PileType.TABLEAU)) {
             if (card.getRank() == 13 && destPile.isEmpty()) {
                 return true;
-            } else if ( (destPile.getTopCard().getRank() - card.getRank() == 1) &&
+            } else if (((!destPile.isEmpty()) && destPile.getTopCard().getRank() - card.getRank() == 1) &&
                     (Card.isOppositeColor(card, destPile.getTopCard())) ) {
                 return true;
             } else {
