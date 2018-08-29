@@ -121,12 +121,8 @@ public class Game extends Pane {
                 return false;
             }
 
-        } else {
-            return false;
-        }
-
-        if(destPile.getPileType().equals(Pile.PileType.FOUNDATION)) {
-            if(destPile.isEmpty() && card.getRank() == 1) {
+        } else if(destPile.getPileType().equals(Pile.PileType.FOUNDATION)) {
+            if(card.getRank() == 1 && destPile.isEmpty()) {
                 return true;
             } else if((destPile.getTopCard().getRank() == card.getRank() - 1) &&
                     (destPile.getTopCard().getSuit() == card.getSuit()))
