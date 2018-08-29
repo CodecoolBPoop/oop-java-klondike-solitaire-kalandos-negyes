@@ -104,7 +104,7 @@ public class Card extends ImageView {
            colour2 = "black";
        }
 
-       return (colour1.equals(colour2));
+       return !(colour1.equals(colour2));
     }
 
     public static boolean isSameSuit(Card card1, Card card2) {
@@ -134,9 +134,7 @@ public class Card extends ImageView {
                 String cardName = suitName + rank;
                 String cardId = "S" + (i+1) + "R" + rank;
                 String imageFileName = "card_images/" + cardName + ".png";
-                System.out.println(cardId);
                 cardFaceImages.put(cardId, new Image(imageFileName));
-                //System.out.println(imageFileName);
             }
         }
 
