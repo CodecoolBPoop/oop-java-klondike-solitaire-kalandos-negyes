@@ -114,6 +114,7 @@ public class Game extends Pane {
             stockPile.addCard(card);
         }
         discardPile.clear();
+
         System.out.println("Stock refilled from discard pile.");
     }
 
@@ -128,10 +129,16 @@ public class Game extends Pane {
                 return false;
             }
 
-        } else {
+        } else if(destPile.getPileType().equals(Pile.PileType.FOUNDATION)) {
+            if(card.getRank() == 1 && destPile.isEmpty()) {
+                return true;
+            } else if((destPile.getTopCard().getRank() == card.getRank() - 1) &&
+                    (destPile.getTopCard().getSuit() == card.getSuit()))
+                return true;
+            else
+                return false;
+        } else
             return false;
-        }
-
     }
     private Pile getValidIntersectingPile(Card card, List<Pile> piles) {
         Pile result = null;
