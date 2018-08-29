@@ -71,6 +71,7 @@ public class Game extends Pane {
         card.toFront();
         card.setTranslateX(offsetX);
         card.setTranslateY(offsetY);
+
     };
 
     private EventHandler<MouseEvent> onMouseReleasedHandler = e -> {
@@ -78,14 +79,25 @@ public class Game extends Pane {
             return;
         Card card = (Card) e.getSource();
         Pile pile = getValidIntersectingPile(card, tableauPiles);
-        //TODO
+        //TODO auto-flipping
+
         if (pile != null) {
             handleValidMove(card, pile);
+
+            if(card.getContainingPile().getCardUnderTopCard() != null){
+                if(card.getContainingPile().getCardUnderTopCard().isFaceDown()){
+                    card.getContainingPile().getCardUnderTopCard().flip();
+                }
+            }
+
         } else {
             draggedCards.forEach(MouseUtil::slideBack);
-            draggedCards = null;
+            draggedCards = FXCollections.observableArrayList();
         }
+
+
     };
+
 
     public boolean isGameWon() {
         //TODO
