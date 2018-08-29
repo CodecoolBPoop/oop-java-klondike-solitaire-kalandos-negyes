@@ -79,22 +79,28 @@ public class Game extends Pane {
         if (draggedCards.isEmpty())
             return;
         Card card = (Card) e.getSource();
-        Pile pile = getValidIntersectingPile(card, tableauPiles);
-        //TODO auto-flipping
 
+        Pile pile = getValidIntersectingPile(card, tableauPiles);
+
+        Pile pile2 = getValidIntersectingPile(card, foundationPiles);
         if (pile != null) {
             handleValidMove(card, pile);
-
             if(card.getContainingPile().getCardUnderTopCard() != null){
                 if(card.getContainingPile().getCardUnderTopCard().isFaceDown()){
                     card.getContainingPile().getCardUnderTopCard().flip();
                 }
             }
-
+        }   else if(pile2 != null){
+            handleValidMove(card, pile2);
+            if(card.getContainingPile().getCardUnderTopCard() != null){
+                if(card.getContainingPile().getCardUnderTopCard().isFaceDown()){
+                    card.getContainingPile().getCardUnderTopCard().flip();
+                }
+            }
         } else {
             draggedCards.forEach(MouseUtil::slideBack);
-            draggedCards = FXCollections.observableArrayList();
-        }
+            draggedCards = FXCollections.observableArrayList();;
+          }
 
 
     };
@@ -144,7 +150,7 @@ public class Game extends Pane {
         } else if(destPile.getPileType().equals(Pile.PileType.FOUNDATION)) {
             if(card.getRank() == 1 && destPile.isEmpty()) {
                 return true;
-            } else if((destPile.getTopCard().getRank() == card.getRank() - 1) &&
+            } else if((!destPile.isEmpty() && destPile.getTopCard().getRank() == card.getRank() - 1) &&
                     (destPile.getTopCard().getSuit() == card.getSuit()))
                 return true;
             else
