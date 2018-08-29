@@ -104,7 +104,7 @@ public class Card extends ImageView {
            colour2 = "black";
        }
 
-       return (colour1.equals(colour2));
+       return !(colour1.equals(colour2));
     }
 
     public static boolean isSameSuit(Card card1, Card card2) {
