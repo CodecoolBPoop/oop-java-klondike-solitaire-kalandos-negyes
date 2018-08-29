@@ -106,13 +106,24 @@ public class Game extends Pane {
     }
 
     public void refillStockFromDiscard() {
-        //TODO
         System.out.println("Stock refilled from discard pile.");
     }
 
     public boolean isMoveValid(Card card, Pile destPile) {
-        //TODO
-        return true;
+        if (destPile.getPileType().equals(Pile.PileType.TABLEAU)) {
+            if (card.getRank() == 13 && destPile.isEmpty()) {
+                return true;
+            } else if ( (destPile.getTopCard().getRank() - card.getRank() == 1) &&
+                    (Card.isOppositeColor(card, destPile.getTopCard())) ) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } else {
+            return false;
+        }
+
     }
     private Pile getValidIntersectingPile(Card card, List<Pile> piles) {
         Pile result = null;
