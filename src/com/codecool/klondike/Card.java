@@ -134,9 +134,7 @@ public class Card extends ImageView {
                 String cardName = suitName + rank;
                 String cardId = "S" + (i+1) + "R" + rank;
                 String imageFileName = "card_images/" + cardName + ".png";
-                System.out.println(cardId);
                 cardFaceImages.put(cardId, new Image(imageFileName));
-                //System.out.println(imageFileName);
             }
         }
 
