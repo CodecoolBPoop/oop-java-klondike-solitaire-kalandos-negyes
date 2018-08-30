@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+@SuppressWarnings("ALL")
 public class Game extends Pane {
 
     private List<Card> deck = new ArrayList<>();
@@ -43,6 +44,23 @@ public class Game extends Pane {
             card.setMouseTransparent(false);
             System.out.println("Placed " + card + " to the waste.");
         }
+
+        if (e.getClickCount() == 2) {
+            for (Pile pile: foundationPiles) {
+                if (!pile.isEmpty() && pile.getTopCard().getRank() == (card.getRank() - 1) && pile.getTopCard().getSuit() == card.getSuit()) {
+                    draggedCards.add(card);
+                    handleValidMove(card, pile);
+                    if (card.getContainingPile().getCardUnderTopCard() != null) {
+                        if (card.getContainingPile().getCardUnderTopCard().isFaceDown()) {
+                            card.getContainingPile().getCardUnderTopCard().flip();
+                        }
+                    }
+
+
+                }
+                ;
+            }
+        }
     };
 
     private EventHandler<MouseEvent> stockReverseCardsHandler = e -> {
@@ -52,6 +70,7 @@ public class Game extends Pane {
     private EventHandler<MouseEvent> onMousePressedHandler = e -> {
         dragStartX = e.getSceneX();
         dragStartY = e.getSceneY();
+
     };
 
     private EventHandler<MouseEvent> onMouseDraggedHandler = e -> {
@@ -140,7 +159,7 @@ public class Game extends Pane {
         if (destPile.getPileType().equals(Pile.PileType.TABLEAU)) {
             if (card.getRank() == 13 && destPile.isEmpty()) {
                 return true;
-            } else if ( (destPile.getTopCard().getRank() - card.getRank() == 1) &&
+            } else if (!destPile.isEmpty() && (destPile.getTopCard().getRank() - card.getRank() == 1) &&
                     (Card.isOppositeColor(card, destPile.getTopCard())) ) {
                 return true;
             } else {
