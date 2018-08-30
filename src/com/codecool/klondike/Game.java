@@ -17,8 +17,13 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+
 import java.awt.*;
 import java.util.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 @SuppressWarnings("ALL")
@@ -82,21 +87,53 @@ public class Game extends Pane {
         Pile activePile = card.getContainingPile();
         if (activePile.getPileType() == Pile.PileType.STOCK) {
             return;
-        }
-        double offsetX = e.getSceneX() - dragStartX;
-        double offsetY = e.getSceneY() - dragStartY;
 
-        draggedCards.clear();
-        draggedCards.add(card);
 
-        card.getDropShadow().setRadius(20);
-        card.getDropShadow().setOffsetX(10);
-        card.getDropShadow().setOffsetY(10);
+        if(!card.isFaceDown()){
+            if(activePile.getTopCard() == card) {
+            double offsetX = e.getSceneX() - dragStartX;
+            double offsetY = e.getSceneY() - dragStartY;
 
-        card.toFront();
-        card.setTranslateX(offsetX);
-        card.setTranslateY(offsetY);
+            draggedCards.clear();
+            draggedCards.add(card);
 
+            card.getDropShadow().setRadius(20);
+            card.getDropShadow().setOffsetX(10);
+            card.getDropShadow().setOffsetY(10);
+
+            card.toFront();
+            card.setTranslateX(offsetX);
+            card.setTranslateY(offsetY);
+        } else{
+                List<Card> sourcePileCards = card.getContainingPile().getCards();
+                List<Card> multiDraggedCards = FXCollections.observableArrayList();
+                int whichCardToMove = 0;
+
+                for (Card myCard : sourcePileCards){
+                    if(myCard == card ){
+                        whichCardToMove = sourcePileCards.indexOf(card);
+                        multiDraggedCards = sourcePileCards.subList(whichCardToMove, sourcePileCards.size());
+
+                    }
+                }
+                double offsetX = e.getSceneX() - dragStartX;
+                double offsetY = e.getSceneY() - dragStartY;
+
+                draggedCards.clear();
+                for(Card myCard : multiDraggedCards){
+                    draggedCards.add(myCard);
+                    myCard.getDropShadow().setRadius(20);
+                    myCard.getDropShadow().setOffsetX(10);
+                    myCard.getDropShadow().setOffsetY(10);
+
+                    myCard.toFront();
+                    myCard.setTranslateX(offsetX);
+                    myCard.setTranslateY(offsetY);
+
+                    }
+                }
+
+            }
     };
 
     private EventHandler<MouseEvent> onMouseReleasedHandler = e -> {
@@ -111,7 +148,10 @@ public class Game extends Pane {
             handleValidMove(card, pile);
             if(card.getContainingPile().getCardUnderTopCard() != null){
                 if(card.getContainingPile().getCardUnderTopCard().isFaceDown()){
-                    card.getContainingPile().getCardUnderTopCard().flip();
+                    card.getContainingPile().getCardUnderTopCard().flip();}
+
+                    else if(card.getContainingPile().getCardfromTop(3).isFaceDown()){
+                        card.getContainingPile().getCardfromTop(3).flip();
                 }
             }
         } else if(pile2 != null){
@@ -124,7 +164,7 @@ public class Game extends Pane {
             isGameWon();
         } else {
             draggedCards.forEach(MouseUtil::slideBack);
-            draggedCards = FXCollections.observableArrayList();;
+            draggedCards = FXCollections.observableArrayList();
           }
 
 
