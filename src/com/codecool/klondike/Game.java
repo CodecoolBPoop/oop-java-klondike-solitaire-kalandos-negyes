@@ -107,8 +107,14 @@ public class Game extends Pane {
 
 
     public boolean isGameWon() {
-        //TODO
-        return false;
+        int numOfFoundCards = 0;
+        int allTheCards = 52;
+        for (Pile pile : foundationPiles)
+            numOfFoundCards += pile.numOfCards();
+        if (numOfFoundCards == allTheCards)
+            return true;
+        else
+            return false;
     }
 
     public Game() {
