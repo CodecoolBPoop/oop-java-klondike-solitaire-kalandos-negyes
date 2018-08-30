@@ -87,8 +87,7 @@ public class Game extends Pane {
         Pile activePile = card.getContainingPile();
         if (activePile.getPileType() == Pile.PileType.STOCK) {
             return;
-
-
+        }
         if(!card.isFaceDown()){
             if(activePile.getTopCard() == card) {
             double offsetX = e.getSceneX() - dragStartX;
