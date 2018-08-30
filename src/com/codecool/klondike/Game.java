@@ -1,9 +1,12 @@
 package com.codecool.klondike;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -12,7 +15,11 @@ import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
+
+import java.awt.*;
+import java.util.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,6 +38,7 @@ public class Game extends Pane {
 
     private double dragStartX, dragStartY;
     private List<Card> draggedCards = FXCollections.observableArrayList();
+    public static Stage prStage;
 
     private static double STOCK_GAP = 1;
     private static double FOUNDATION_GAP = 0;
@@ -77,8 +85,9 @@ public class Game extends Pane {
     private EventHandler<MouseEvent> onMouseDraggedHandler = e -> {
         Card card = (Card) e.getSource();
         Pile activePile = card.getContainingPile();
-        if (activePile.getPileType() == Pile.PileType.STOCK)
+        if (activePile.getPileType() == Pile.PileType.STOCK) {
             return;
+
 
         if(!card.isFaceDown()){
             if(activePile.getTopCard() == card) {
@@ -145,13 +154,14 @@ public class Game extends Pane {
                         card.getContainingPile().getCardfromTop(3).flip();
                 }
             }
-        }   else if(pile2 != null){
+        } else if(pile2 != null){
             handleValidMove(card, pile2);
             if(card.getContainingPile().getCardUnderTopCard() != null){
                 if(card.getContainingPile().getCardUnderTopCard().isFaceDown()){
                     card.getContainingPile().getCardUnderTopCard().flip();
                 }
             }
+            isGameWon();
         } else {
             draggedCards.forEach(MouseUtil::slideBack);
             draggedCards = FXCollections.observableArrayList();
@@ -162,8 +172,31 @@ public class Game extends Pane {
 
 
     public boolean isGameWon() {
-        //TODO
-        return false;
+        int numOfFoundCards = 1;
+        for (Pile pile : foundationPiles)
+            numOfFoundCards += pile.numOfCards();
+        if (numOfFoundCards == 2) {
+            showWinPopup();
+             return true;
+        }
+        else
+            return false;
+    }
+
+    private void showWinPopup() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Application information");
+        alert.setHeaderText("Congratulations, you won!");
+        alert.setContentText("Do you want to replay?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            Klondike klondike = new Klondike();
+            klondike.restart(prStage);
+        }
+        else {
+            Platform.exit();
+        }
     }
 
     public Game() {
@@ -171,6 +204,7 @@ public class Game extends Pane {
         initPiles();
         dealCards();
     }
+
 
     public void addMouseEventHandlers(Card card) {
         card.setOnMousePressed(onMousePressedHandler);
@@ -195,7 +229,9 @@ public class Game extends Pane {
         if (destPile.getPileType().equals(Pile.PileType.TABLEAU)) {
             if (card.getRank() == 13 && destPile.isEmpty()) {
                 return true;
-            } else if (!destPile.isEmpty() && (destPile.getTopCard().getRank() - card.getRank() == 1) &&
+
+            } else if (!destPile.isEmpty() &&
+                    (destPile.getTopCard().getRank() - card.getRank() == 1) &&
                     (Card.isOppositeColor(card, destPile.getTopCard())) ) {
                 return true;
             } else {
@@ -205,7 +241,8 @@ public class Game extends Pane {
         } else if(destPile.getPileType().equals(Pile.PileType.FOUNDATION)) {
             if(card.getRank() == 1 && destPile.isEmpty()) {
                 return true;
-            } else if((!destPile.isEmpty() && destPile.getTopCard().getRank() == card.getRank() - 1) &&
+            } else if((!destPile.isEmpty() &&
+                    destPile.getTopCard().getRank() == card.getRank() - 1) &&
                     (destPile.getTopCard().getSuit() == card.getSuit()))
                 return true;
             else
