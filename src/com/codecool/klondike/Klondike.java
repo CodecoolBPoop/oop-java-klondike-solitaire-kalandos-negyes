@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.scene.control.Button;
 
 public class Klondike extends Application {
 
@@ -22,6 +23,9 @@ public class Klondike extends Application {
         game.setTableBackground(new Image("/table/green.png"));
         Game.prStage = primaryStage;
 
+        Button restartButton = new Button("Restart");
+        game.getChildren().add(restartButton);
+
         primaryStage.setTitle("Klondike Solitaire");
         primaryStage.setScene(new Scene(game, WINDOW_WIDTH, WINDOW_HEIGHT));
         primaryStage.show();
@@ -31,4 +35,12 @@ public class Klondike extends Application {
         primarystage.close();
         start(primarystage);
     }
+
+    public void initBtn(Button button) {
+        button.setPrefSize(100, 50);
+        button.toFront();
+        button.relocate(2, 692);
+        //button.setOnMouseClicked();
+    }
+
 }

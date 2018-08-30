@@ -59,13 +59,12 @@ public class Game extends Pane {
                 if (!pile.isEmpty() && pile.getTopCard().getRank() == (card.getRank() - 1) && pile.getTopCard().getSuit() == card.getSuit()) {
                     draggedCards.add(card);
                     handleValidMove(card, pile);
+                    isGameWon();
                     if (card.getContainingPile().getCardUnderTopCard() != null) {
                         if (card.getContainingPile().getCardUnderTopCard().isFaceDown()) {
                             card.getContainingPile().getCardUnderTopCard().flip();
                         }
                     }
-
-
                 }
                 ;
             }
@@ -87,8 +86,7 @@ public class Game extends Pane {
         Pile activePile = card.getContainingPile();
         if (activePile.getPileType() == Pile.PileType.STOCK) {
             return;
-
-
+        }
         if(!card.isFaceDown()){
             if(activePile.getTopCard() == card) {
             double offsetX = e.getSceneX() - dragStartX;
@@ -175,7 +173,7 @@ public class Game extends Pane {
         int numOfFoundCards = 1;
         for (Pile pile : foundationPiles)
             numOfFoundCards += pile.numOfCards();
-        if (numOfFoundCards == 2) {
+        if (numOfFoundCards == 52) {
             showWinPopup();
              return true;
         }
@@ -301,7 +299,7 @@ public class Game extends Pane {
         for (int i = 0; i < 4; i++) {
             Pile foundationPile = new Pile(Pile.PileType.FOUNDATION, "Foundation " + i, FOUNDATION_GAP);
             foundationPile.setBlurredBackground();
-            foundationPile.setLayoutX(610 + i * 180);
+            foundationPile.setLayoutX(550 + i * 180);
             foundationPile.setLayoutY(20);
             foundationPiles.add(foundationPile);
             getChildren().add(foundationPile);
@@ -309,7 +307,7 @@ public class Game extends Pane {
         for (int i = 0; i < 7; i++) {
             Pile tableauPile = new Pile(Pile.PileType.TABLEAU, "Tableau " + i, TABLEAU_GAP);
             tableauPile.setBlurredBackground();
-            tableauPile.setLayoutX(95 + i * 180);
+            tableauPile.setLayoutX(30 + i * 180);
             tableauPile.setLayoutY(275);
             tableauPiles.add(tableauPile);
             getChildren().add(tableauPile);
