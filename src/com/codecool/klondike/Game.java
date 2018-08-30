@@ -142,7 +142,6 @@ public class Game extends Pane {
                     card.getContainingPile().getCardUnderTopCard().flip();}
 
                     else if(card.getContainingPile().getCardfromTop(3).isFaceDown()){
-                        System.out.println("FLIIIIIIP: " + card);
                         card.getContainingPile().getCardfromTop(3).flip();
                 }
             }
