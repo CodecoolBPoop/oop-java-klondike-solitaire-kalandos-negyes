@@ -35,6 +35,7 @@ public class Game extends Pane {
     private Pile discardPile;
     private List<Pile> foundationPiles = FXCollections.observableArrayList();
     private List<Pile> tableauPiles = FXCollections.observableArrayList();
+    List<Card> multiDraggedCards = FXCollections.observableArrayList();
 
     private double dragStartX, dragStartY;
     private List<Card> draggedCards = FXCollections.observableArrayList();
@@ -102,9 +103,9 @@ public class Game extends Pane {
             card.toFront();
             card.setTranslateX(offsetX);
             card.setTranslateY(offsetY);
-        } else{
+        } else {
                 List<Card> sourcePileCards = card.getContainingPile().getCards();
-                List<Card> multiDraggedCards = FXCollections.observableArrayList();
+                //List<Card> multiDraggedCards = FXCollections.observableArrayList();
                 int whichCardToMove = 0;
 
                 for (Card myCard : sourcePileCards){
@@ -148,8 +149,9 @@ public class Game extends Pane {
                 if(card.getContainingPile().getCardUnderTopCard().isFaceDown()){
                     card.getContainingPile().getCardUnderTopCard().flip();}
 
-                    else if(card.getContainingPile().getCardfromTop(3).isFaceDown()){
-                        card.getContainingPile().getCardfromTop(3).flip();
+                    else if((card.getContainingPile().getCardfromTop(multiDraggedCards.size() + 1).isFaceDown()) &&
+                        (card.getContainingPile().getCardfromTop(multiDraggedCards.size() + 1) != null)){
+                        card.getContainingPile().getCardfromTop(multiDraggedCards.size() + 1).flip();
                 }
             }
         } else if(pile2 != null){
